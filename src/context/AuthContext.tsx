@@ -110,8 +110,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             email,
             password
         });
-        if (error) throw error;
-        alert('Cadastro realizado! Verifique seu email para confirmar.');
+        if (error) {
+            if (error.message.includes('already registered')) {
+                throw new Error('Este email já está cadastrado. Use a aba "Login" para entrar.');
+            }
+            throw error;
+        }
+        alert('Cadastro realizado! Você pode fazer login agora.');
     };
 
     const logout = async () => {
