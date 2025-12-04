@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useData } from '../context/DataContext';
-import { BarChart3, TrendingUp, Truck, Users, Filter, Edit } from 'lucide-react';
+import { TrendingUp, Filter, Edit } from 'lucide-react';
 
 export const AdminDashboard = () => {
     const { orders, branches } = useData();

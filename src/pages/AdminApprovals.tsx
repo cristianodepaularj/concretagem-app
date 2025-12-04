@@ -1,5 +1,5 @@
 import { useData } from '../context/DataContext';
-import { CheckCircle, XCircle, Clock, FileText, Trash2, Phone, MessageCircle, ArrowRight } from 'lucide-react';
+import { Trash2, Phone, MessageCircle, ArrowRight } from 'lucide-react';
 
 export const AdminApprovals = () => {
     const { orders, updateOrderStatus } = useData();

@@ -20,7 +20,7 @@ const INITIAL_BRANCHES: Branch[] = [
 
 export const DataProvider = ({ children }: { children: ReactNode }) => {
     const [orders, setOrders] = useState<Order[]>([]);
-    const [branches, setBranches] = useState<Branch[]>(INITIAL_BRANCHES); // Keep branches hardcoded for now or fetch if table exists
+    const [branches] = useState<Branch[]>(INITIAL_BRANCHES); // Keep branches hardcoded for now or fetch if table exists
 
     useEffect(() => {
         fetchOrders();
