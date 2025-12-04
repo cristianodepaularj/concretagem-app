@@ -67,19 +67,30 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
                 if (insertError) {
                     console.error('Error creating user profile:', insertError);
+                    // Even if insert fails, set user with fallback data
+                    setUser(newUser as User);
                 } else {
                     setUser(newUser as User);
                 }
             }
         } catch (error) {
             console.error('Error fetching user profile:', error);
-            // Fallback: Allow access even if profile fetch fails
+            // Fallback: Create user profile even on error
+            const isFirstUser = email === 'cristianospaula1972@gmail.com';
             const fallbackUser: User = {
                 id: userId,
                 email: email,
                 name: email.split('@')[0],
-                role: 'consultant',
+                role: isFirstUser ? 'admin' : 'consultant',
             };
+
+            // Try to insert fallback user
+            try {
+                await supabase.from('users').insert([fallbackUser]);
+            } catch (insertError) {
+                console.error('Error inserting fallback user:', insertError);
+            }
+
             setUser(fallbackUser);
         } finally {
             setLoading(false);
