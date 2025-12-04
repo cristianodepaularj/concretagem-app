@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useData } from '../context/DataContext';
 import { useAuth } from '../context/AuthContext';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
@@ -6,8 +7,10 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 export const CalendarView = () => {
     const { orders } = useData();
     const { user } = useAuth();
+    const navigate = useNavigate();
 
     const [currentDate, setCurrentDate] = useState(new Date());
+    const [viewMode, setViewMode] = useState<'day' | 'week' | 'month'>('month');
 
     const getDaysInMonth = (date: Date) => {
         const year = date.getFullYear();
@@ -54,9 +57,24 @@ export const CalendarView = () => {
         <div className="bg-white rounded-lg shadow p-6">
             <div className="flex justify-between items-center mb-6">
                 <div className="flex space-x-4 text-sm font-medium text-gray-500">
-                    <span className="cursor-pointer hover:text-blue-600">Day</span>
-                    <span className="cursor-pointer hover:text-blue-600">Week</span>
-                    <span className="text-blue-600 border-b-2 border-blue-600 pb-1">Month</span>
+                    <span
+                        className={`cursor-pointer hover:text-blue-600 ${viewMode === 'day' ? 'text-blue-600 border-b-2 border-blue-600 pb-1' : ''}`}
+                        onClick={() => setViewMode('day')}
+                    >
+                        Day
+                    </span>
+                    <span
+                        className={`cursor-pointer hover:text-blue-600 ${viewMode === 'week' ? 'text-blue-600 border-b-2 border-blue-600 pb-1' : ''}`}
+                        onClick={() => setViewMode('week')}
+                    >
+                        Week
+                    </span>
+                    <span
+                        className={`cursor-pointer hover:text-blue-600 ${viewMode === 'month' ? 'text-blue-600 border-b-2 border-blue-600 pb-1' : ''}`}
+                        onClick={() => setViewMode('month')}
+                    >
+                        Month
+                    </span>
                 </div>
                 <div className="flex items-center space-x-4">
                     <button onClick={prevMonth} className="p-1 hover:bg-gray-100 rounded-full">
@@ -100,7 +118,12 @@ export const CalendarView = () => {
                             </div>
                             <div className="space-y-1 overflow-y-auto max-h-[calc(100%-24px)]">
                                 {dayOrders.map(order => (
-                                    <div key={order.id} className="bg-blue-500 text-white text-[10px] px-1 py-0.5 rounded truncate" title={`${order.pumpType} - ${order.client}`}>
+                                    <div
+                                        key={order.id}
+                                        className="bg-blue-500 text-white text-[10px] px-1 py-0.5 rounded truncate cursor-pointer hover:bg-blue-600 transition-colors"
+                                        title={`${order.pumpType} - ${order.client}`}
+                                        onClick={() => navigate(`/admin/approvals/${order.id}`)}
+                                    >
                                         {order.pumpType} - {order.client}
                                     </div>
                                 ))}
