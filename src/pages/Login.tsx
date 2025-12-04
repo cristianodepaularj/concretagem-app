@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import { User, Lock, Loader } from 'lucide-react';
+import { Lock, Loader } from 'lucide-react';
 
 export const Login = () => {
     const { loginWithPassword, signUp, user } = useAuth();
@@ -49,7 +49,30 @@ export const Login = () => {
                 </div>
 
                 <div className="p-8">
-                    <form onSubmit={handleLogin} className="space-y-6">
+                    <div className="flex gap-2 mb-6">
+                        <button
+                            type="button"
+                            onClick={() => setIsRegister(false)}
+                            className={`flex-1 py-2 rounded-lg font-medium transition-colors ${!isRegister
+                                    ? 'bg-blue-600 text-white'
+                                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                                }`}
+                        >
+                            Login
+                        </button>
+                        <button
+                            type="button"
+                            onClick={() => setIsRegister(true)}
+                            className={`flex-1 py-2 rounded-lg font-medium transition-colors ${isRegister
+                                    ? 'bg-blue-600 text-white'
+                                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                                }`}
+                        >
+                            Cadastrar
+                        </button>
+                    </div>
+
+                    <form onSubmit={handleSubmit} className="space-y-6">
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2">
                                 Email
@@ -64,6 +87,21 @@ export const Login = () => {
                             />
                         </div>
 
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                                Senha
+                            </label>
+                            <input
+                                type="password"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+                                placeholder="••••••••"
+                                required
+                                minLength={6}
+                            />
+                        </div>
+
                         {message && (
                             <div className={`p-3 rounded-lg text-sm ${message.includes('Erro') ? 'bg-red-50 text-red-600' : 'bg-green-50 text-green-600'}`}>
                                 {message}
@@ -75,13 +113,9 @@ export const Login = () => {
                             disabled={loading}
                             className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors flex items-center justify-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed"
                         >
-                            {loading ? <Loader className="animate-spin" size={20} /> : <User size={20} />}
-                            <span>{loading ? 'Enviando...' : 'Entrar com Email'}</span>
+                            {loading ? <Loader className="animate-spin" size={20} /> : <Lock size={20} />}
+                            <span>{loading ? 'Processando...' : (isRegister ? 'Criar Conta' : 'Entrar')}</span>
                         </button>
-
-                        <p className="text-xs text-center text-gray-400 mt-4">
-                            Será redirecionado para: {window.location.origin}
-                        </p>
                     </form>
                 </div>
             </div>
