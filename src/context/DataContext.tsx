@@ -39,11 +39,15 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
     };
 
     const addOrder = async (orderData: Omit<Order, 'id' | 'status'>) => {
+        console.log('Adding order with data:', orderData);
+
         const newOrder = {
             id: crypto.randomUUID(),
             ...orderData,
             status: 'Pending'
         };
+
+        console.log('Inserting order:', newOrder);
 
         const { data, error } = await supabase
             .from('orders')
@@ -53,18 +57,30 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
 
         if (error) {
             console.error('Error adding order:', error);
-        } else if (data) {
+            alert(`Erro ao criar pedido: ${error.message}`);
+            return;
+        }
+
+        if (data) {
+            console.log('Order created successfully:', data);
             setOrders([...orders, data]);
+            alert('Pedido criado com sucesso!');
 
             // Enviar notificação por email para o admin
             try {
-                await supabase.functions.invoke('send-order-notification', {
+                console.log('Sending email notification...');
+                const { data: emailData, error: emailError } = await supabase.functions.invoke('send-order-notification', {
                     body: {
                         order: data,
                         consultant: orderData.consultantName
                     }
                 });
-                console.log('Email notification sent successfully');
+
+                if (emailError) {
+                    console.error('Email error:', emailError);
+                } else {
+                    console.log('Email notification sent successfully:', emailData);
+                }
             } catch (emailError) {
                 console.error('Error sending email notification:', emailError);
                 // Não bloqueia o fluxo se o email falhar

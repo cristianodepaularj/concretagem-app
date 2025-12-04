@@ -23,11 +23,11 @@ export const PreSchedule = () => {
         observations: ''
     });
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!user) return;
 
-        addOrder({
+        const orderData: any = {
             dateRequest: new Date().toISOString().split('T')[0],
             branch: formData.branch,
             consultantId: user.id,
@@ -38,11 +38,19 @@ export const PreSchedule = () => {
             pumpType: formData.pumpType,
             concreteDate: formData.concreteDate,
             concreteTime: formData.concreteTime,
-            fck: formData.fck ? Number(formData.fck) : undefined,
-            contract: formData.contract ? Number(formData.contract) : undefined,
             notes: formData.notes,
             observations: formData.observations
-        });
+        };
+
+        // Adicionar campos opcionais apenas se preenchidos
+        if (formData.fck) {
+            orderData.fck = Number(formData.fck);
+        }
+        if (formData.contract) {
+            orderData.contract = Number(formData.contract);
+        }
+
+        await addOrder(orderData);
 
         alert('Pré-agendamento enviado com sucesso!');
         navigate('/calendar');
