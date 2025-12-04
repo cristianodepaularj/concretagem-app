@@ -55,6 +55,20 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
             console.error('Error adding order:', error);
         } else if (data) {
             setOrders([...orders, data]);
+
+            // Enviar notificação por email para o admin
+            try {
+                await supabase.functions.invoke('send-order-notification', {
+                    body: {
+                        order: data,
+                        consultant: orderData.consultantName
+                    }
+                });
+                console.log('Email notification sent successfully');
+            } catch (emailError) {
+                console.error('Error sending email notification:', emailError);
+                // Não bloqueia o fluxo se o email falhar
+            }
         }
     };
 

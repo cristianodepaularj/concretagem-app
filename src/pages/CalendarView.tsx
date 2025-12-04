@@ -33,8 +33,12 @@ export const CalendarView = () => {
     const filteredOrders = orders.filter(o => {
         // Role Filter
         if (user?.role !== 'admin' && o.consultantId !== user?.id) return false;
-        // Status Filter (Approved only for calendar usually, but let's show all for now or based on req)
-        return o.status === 'Approved';
+        // Show all orders for consultants (Pending, Approved, Rejected)
+        // Show only Approved for admins in calendar
+        if (user?.role === 'admin') {
+            return o.status === 'Approved';
+        }
+        return true; // Show all statuses for consultants
     });
 
     const getOrdersForDay = (day: number) => {
@@ -117,16 +121,24 @@ export const CalendarView = () => {
                                 {day}
                             </div>
                             <div className="space-y-1 overflow-y-auto max-h-[calc(100%-24px)]">
-                                {dayOrders.map(order => (
-                                    <div
-                                        key={order.id}
-                                        className="bg-blue-500 text-white text-[10px] px-1 py-0.5 rounded truncate cursor-pointer hover:bg-blue-600 transition-colors"
-                                        title={`${order.pumpType} - ${order.client}`}
-                                        onClick={() => navigate(`/admin/approvals/${order.id}`)}
-                                    >
-                                        {order.pumpType} - {order.client}
-                                    </div>
-                                ))}
+                                {dayOrders.map(order => {
+                                    const statusColor =
+                                        order.status === 'Approved' ? 'bg-green-500 hover:bg-green-600' :
+                                            order.status === 'Pending' ? 'bg-yellow-500 hover:bg-yellow-600' :
+                                                order.status === 'Rejected' ? 'bg-red-500 hover:bg-red-600' :
+                                                    'bg-blue-500 hover:bg-blue-600';
+
+                                    return (
+                                        <div
+                                            key={order.id}
+                                            className={`${statusColor} text-white text-[10px] px-1 py-0.5 rounded truncate cursor-pointer transition-colors`}
+                                            title={`${order.status} - ${order.pumpType} - ${order.client}`}
+                                            onClick={() => navigate(`/admin/approvals/${order.id}`)}
+                                        >
+                                            {order.pumpType} - {order.client}
+                                        </div>
+                                    );
+                                })}
                             </div>
                         </div>
                     );
