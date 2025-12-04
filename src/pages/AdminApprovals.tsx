@@ -79,26 +79,49 @@ export const AdminApprovals = () => {
                 <div className="bg-white rounded-lg shadow border border-gray-200 flex flex-col">
                     <div className="p-4 border-b border-gray-200 flex justify-between items-center bg-gray-50 rounded-t-lg">
                         <h2 className="font-semibold text-gray-700">MEUS PEDIDOS</h2>
-                        <button className="bg-blue-600 text-white px-3 py-1 rounded text-sm flex items-center gap-1">
+                        <button
+                            onClick={() => navigate('/pre-schedule')}
+                            className="bg-blue-600 text-white px-3 py-1 rounded text-sm flex items-center gap-1"
+                        >
                             + Add
                         </button>
                     </div>
 
-                    <div className="flex-1 overflow-y-auto p-4">
-                        <div className="space-y-1">
-                            <div className="text-sm text-gray-500 py-2 border-b border-gray-100">All</div>
-                            {/* Group by Month/Date logic could go here, for now listing recent */}
-                            {historyOrders.map(order => (
-                                <div key={order.id} className="py-3 border-b border-gray-100 flex justify-between items-center hover:bg-gray-50 px-2 rounded cursor-pointer">
-                                    <span className="text-sm font-medium text-gray-700">
-                                        {new Date(order.dateRequest).toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' }).toUpperCase()}
-                                    </span>
-                                    <span className="bg-gray-100 text-gray-600 text-xs px-2 py-0.5 rounded">
-                                        {order.volume}
-                                    </span>
-                                </div>
-                            ))}
-                        </div>
+                    <div className="flex-1 overflow-y-auto p-4 space-y-4">
+                        {historyOrders.length === 0 ? (
+                            <div className="text-center py-8 text-gray-500">
+                                Nenhum pedido no histórico.
+                            </div>
+                        ) : (
+                            <>
+                                <div className="text-xs text-gray-500 uppercase mb-2">All</div>
+                                {historyOrders.map(order => (
+                                    <div
+                                        key={order.id}
+                                        className="border-b border-gray-100 pb-3 last:border-0 hover:bg-gray-50 p-3 rounded-lg cursor-pointer transition-colors"
+                                        onClick={() => navigate(`/admin/approvals/${order.id}`)}
+                                    >
+                                        <div className="flex justify-between items-start">
+                                            <div className="flex-1">
+                                                <div className="text-sm font-medium text-gray-900">
+                                                    {new Date(order.concreteDate).toLocaleDateString('pt-BR', {
+                                                        day: '2-digit',
+                                                        month: 'long',
+                                                        year: 'numeric'
+                                                    }).toUpperCase()}
+                                                </div>
+                                                <div className="text-xs text-gray-500 mt-1">
+                                                    {order.client} - {order.branch}
+                                                </div>
+                                            </div>
+                                            <div className="text-sm font-medium text-gray-600">
+                                                {order.volume}
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </>
+                        )}
                     </div>
                 </div>
             </div>

@@ -137,19 +137,25 @@ export const AdminDashboard = () => {
                     </div>
 
                     <div className="flex-1 flex items-end justify-around space-x-4 pb-6 border-b border-gray-200 min-h-[300px]">
-                        {volumeByBranch.map(branch => (
-                            <div key={branch.name} className="flex flex-col items-center w-full group">
-                                <div
-                                    className="w-full max-w-[80px] bg-green-500 rounded-t transition-all duration-500 group-hover:bg-green-600 relative"
-                                    style={{ height: `${(branch.volume / maxVolume) * 100}%` }}
-                                >
-                                    <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 text-xs font-bold text-gray-600 opacity-0 group-hover:opacity-100 transition-opacity">
-                                        {branch.volume}
+                        {volumeByBranch.map(branch => {
+                            const heightPercent = maxVolume > 0 ? (branch.volume / maxVolume) * 80 : 0;
+                            const minHeight = branch.volume > 0 ? 20 : 0;
+                            const finalHeight = Math.max(heightPercent, minHeight);
+
+                            return (
+                                <div key={branch.name} className="flex flex-col items-center w-full group">
+                                    <div
+                                        className="w-full max-w-[80px] bg-green-500 rounded-t transition-all duration-500 group-hover:bg-green-600 relative"
+                                        style={{ height: `${finalHeight}%` }}
+                                    >
+                                        <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 text-xs font-bold text-gray-600">
+                                            {branch.volume}
+                                        </div>
                                     </div>
+                                    <span className="text-xs text-gray-500 mt-2 transform -rotate-45 origin-top-left translate-y-4 whitespace-nowrap">{branch.name}</span>
                                 </div>
-                                <span className="text-xs text-gray-500 mt-2 transform -rotate-45 origin-top-left translate-y-4 whitespace-nowrap">{branch.name}</span>
-                            </div>
-                        ))}
+                            );
+                        })}
                     </div>
                 </div>
             </div>
