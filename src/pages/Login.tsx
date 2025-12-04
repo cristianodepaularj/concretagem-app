@@ -4,11 +4,13 @@ import { useNavigate } from 'react-router-dom';
 import { User, Lock, Loader } from 'lucide-react';
 
 export const Login = () => {
-    const { login, user } = useAuth();
+    const { loginWithPassword, signUp, user } = useAuth();
     const navigate = useNavigate();
     const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState('');
+    const [isRegister, setIsRegister] = useState(false);
 
     useEffect(() => {
         if (user) {
@@ -16,16 +18,20 @@ export const Login = () => {
         }
     }, [user, navigate]);
 
-    const handleLogin = async (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
         setMessage('');
         try {
-            await login(email);
-            setMessage('Link de login enviado para seu email!');
-        } catch (error) {
+            if (isRegister) {
+                await signUp(email, password);
+                setMessage('Cadastro realizado! Verifique seu email para confirmar.');
+            } else {
+                await loginWithPassword(email, password);
+            }
+        } catch (error: any) {
             console.error(error);
-            setMessage('Erro ao enviar link de login. Tente novamente.');
+            setMessage(error.message || 'Erro ao fazer login. Verifique suas credenciais.');
         } finally {
             setLoading(false);
         }

@@ -40,6 +40,7 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
 
     const addOrder = async (orderData: Omit<Order, 'id' | 'status'>) => {
         const newOrder = {
+            id: crypto.randomUUID(),
             ...orderData,
             status: 'Pending'
         };
