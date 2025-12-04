@@ -72,6 +72,10 @@ export const Login = () => {
                             {loading ? <Loader className="animate-spin" size={20} /> : <User size={20} />}
                             <span>{loading ? 'Enviando...' : 'Entrar com Email'}</span>
                         </button>
+
+                        <p className="text-xs text-center text-gray-400 mt-4">
+                            Será redirecionado para: {window.location.origin}
+                        </p>
                     </form>
                 </div>
             </div>
