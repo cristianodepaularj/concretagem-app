@@ -71,6 +71,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             }
         } catch (error) {
             console.error('Error fetching user profile:', error);
+            // Fallback: Allow access even if profile fetch fails
+            const fallbackUser: User = {
+                id: userId,
+                email: email,
+                name: email.split('@')[0],
+                role: 'consultant',
+            };
+            setUser(fallbackUser);
         } finally {
             setLoading(false);
         }

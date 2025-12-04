@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { Outlet, Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { LogOut, Calendar, PlusCircle, LayoutDashboard, CheckSquare, Users } from 'lucide-react';
@@ -13,7 +14,13 @@ export const Layout = () => {
         navigate('/login');
     };
 
-    if (!user) return <Outlet />;
+    useEffect(() => {
+        if (!user) {
+            navigate('/login');
+        }
+    }, [user, navigate]);
+
+    if (!user) return null;
 
     const NavItem = ({ to, icon: Icon, label }: { to: string; icon: any; label: string }) => (
         <Link
