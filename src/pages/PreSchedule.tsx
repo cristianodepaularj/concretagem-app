@@ -12,10 +12,15 @@ export const PreSchedule = () => {
     const [formData, setFormData] = useState({
         branch: '',
         client: '',
+        clientPhone: '',
         volume: '',
         pumpType: 'CONVENCIONAL',
         concreteDate: '',
-        notes: ''
+        concreteTime: '',
+        fck: '',
+        contract: '',
+        notes: '',
+        observations: ''
     });
 
     const handleSubmit = (e: React.FormEvent) => {
@@ -28,10 +33,15 @@ export const PreSchedule = () => {
             consultantId: user.id,
             consultantName: user.name,
             client: formData.client,
+            clientPhone: formData.clientPhone,
             volume: Number(formData.volume),
             pumpType: formData.pumpType,
             concreteDate: formData.concreteDate,
-            notes: formData.notes
+            concreteTime: formData.concreteTime,
+            fck: formData.fck ? Number(formData.fck) : undefined,
+            contract: formData.contract ? Number(formData.contract) : undefined,
+            notes: formData.notes,
+            observations: formData.observations
         });
 
         alert('Pré-agendamento enviado com sucesso!');
@@ -78,6 +88,20 @@ export const PreSchedule = () => {
                                 placeholder="Nome do Cliente / Obra"
                                 value={formData.client}
                                 onChange={e => setFormData({ ...formData, client: e.target.value })}
+                            />
+                        </div>
+
+                        {/* Client Phone */}
+                        <div className="col-span-2">
+                            <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center">
+                                <User size={16} className="mr-2" /> Telefone do Cliente
+                            </label>
+                            <input
+                                type="tel"
+                                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                                placeholder="(00) 00000-0000"
+                                value={formData.clientPhone}
+                                onChange={e => setFormData({ ...formData, clientPhone: e.target.value })}
                             />
                         </div>
 
@@ -128,6 +152,49 @@ export const PreSchedule = () => {
                             />
                         </div>
 
+                        {/* Time */}
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center">
+                                <Calendar size={16} className="mr-2" /> Hora
+                            </label>
+                            <input
+                                type="time"
+                                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                                value={formData.concreteTime}
+                                onChange={e => setFormData({ ...formData, concreteTime: e.target.value })}
+                            />
+                        </div>
+
+                        {/* FCK */}
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center">
+                                <FileText size={16} className="mr-2" /> FCK
+                            </label>
+                            <input
+                                type="number"
+                                min="0"
+                                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                                placeholder="0"
+                                value={formData.fck}
+                                onChange={e => setFormData({ ...formData, fck: e.target.value })}
+                            />
+                        </div>
+
+                        {/* Contract */}
+                        <div className="col-span-2">
+                            <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center">
+                                <FileText size={16} className="mr-2" /> Contrato
+                            </label>
+                            <input
+                                type="number"
+                                min="0"
+                                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                                placeholder="Número do contrato"
+                                value={formData.contract}
+                                onChange={e => setFormData({ ...formData, contract: e.target.value })}
+                            />
+                        </div>
+
                         {/* Notes */}
                         <div className="col-span-2">
                             <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center">
@@ -138,6 +205,19 @@ export const PreSchedule = () => {
                                 placeholder="Detalhes adicionais..."
                                 value={formData.notes}
                                 onChange={e => setFormData({ ...formData, notes: e.target.value })}
+                            />
+                        </div>
+
+                        {/* Observations */}
+                        <div className="col-span-2">
+                            <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center">
+                                <FileText size={16} className="mr-2" /> Observações Adicionais
+                            </label>
+                            <textarea
+                                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none h-24"
+                                placeholder="Observações extras..."
+                                value={formData.observations}
+                                onChange={e => setFormData({ ...formData, observations: e.target.value })}
                             />
                         </div>
                     </div>

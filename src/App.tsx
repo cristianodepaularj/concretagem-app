@@ -9,6 +9,7 @@ import { AdminDashboard } from './pages/AdminDashboard';
 import { AdminApprovals } from './pages/AdminApprovals';
 import { AdminUsers } from './pages/AdminUsers';
 import { CalendarView } from './pages/CalendarView';
+import { OrderDetails } from './pages/OrderDetails';
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
               {/* Admin Routes */}
               <Route path="admin/dashboard" element={<AdminDashboard />} />
               <Route path="admin/approvals" element={<AdminApprovals />} />
+              <Route path="admin/approvals/:id" element={<OrderDetails />} />
               <Route path="admin/users" element={<AdminUsers />} />
             </Route>
           </Routes>

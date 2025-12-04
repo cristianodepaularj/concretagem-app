@@ -1,8 +1,10 @@
+import { useNavigate } from 'react-router-dom';
 import { useData } from '../context/DataContext';
 import { Trash2, Phone, MessageCircle, ArrowRight } from 'lucide-react';
 
 export const AdminApprovals = () => {
     const { orders, updateOrderStatus } = useData();
+    const navigate = useNavigate();
 
     const pendingOrders = orders.filter(o => o.status === 'Pending');
     const historyOrders = orders.filter(o => o.status !== 'Pending');
@@ -17,7 +19,10 @@ export const AdminApprovals = () => {
                     <div className="p-4 border-b border-gray-200 flex justify-between items-center bg-gray-50 rounded-t-lg">
                         <h2 className="font-semibold text-gray-700">APROVAR PEDIDOS</h2>
                         <div className="flex space-x-2">
-                            <button className="bg-blue-600 text-white px-3 py-1 rounded text-sm flex items-center gap-1">
+                            <button
+                                onClick={() => navigate('/pre-schedule')}
+                                className="bg-blue-600 text-white px-3 py-1 rounded text-sm flex items-center gap-1"
+                            >
                                 + Add
                             </button>
                         </div>
@@ -30,26 +35,27 @@ export const AdminApprovals = () => {
                             </div>
                         ) : (
                             pendingOrders.map(order => (
-                                <div key={order.id} className="border-b border-gray-100 pb-4 last:border-0">
+                                <div
+                                    key={order.id}
+                                    className="border-b border-gray-100 pb-4 last:border-0 hover:bg-gray-50 p-3 rounded-lg cursor-pointer transition-colors"
+                                    onClick={() => navigate(`/admin/approvals/${order.id}`)}
+                                >
                                     <div className="flex justify-between items-start">
                                         <div>
                                             <div className="flex items-center gap-2">
                                                 <span className="font-medium text-gray-900">{order.client}</span>
-                                                <span className="bg-gray-100 text-gray-600 text-xs px-2 py-0.5 rounded">1</span>
+                                                <span className="bg-gray-100 text-gray-600 text-xs px-2 py-0.5 rounded">{order.volume}m³</span>
                                             </div>
                                             <div className="text-sm text-gray-500 mt-1">
-                                                {order.consultantName} | {order.status.toUpperCase()} | {order.id}
+                                                {order.consultantName} | {order.branch}
                                             </div>
                                             <div className="text-sm text-gray-500">
-                                                {order.client}
+                                                {new Date(order.concreteDate).toLocaleDateString('pt-BR')}
                                             </div>
-                                        </div>
-                                        <div className="text-sm text-gray-400">
-                                            24
                                         </div>
                                     </div>
 
-                                    <div className="flex justify-end gap-3 mt-3">
+                                    <div className="flex justify-end gap-3 mt-3" onClick={(e) => e.stopPropagation()}>
                                         <button onClick={() => updateOrderStatus(order.id, 'Rejected')} className="text-gray-400 hover:text-red-500">
                                             <Trash2 size={18} />
                                         </button>

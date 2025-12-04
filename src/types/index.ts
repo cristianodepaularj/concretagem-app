@@ -17,10 +17,15 @@ export interface Order {
     consultantId: string;
     consultantName: string;
     client: string;
+    clientPhone?: string; // Telefone do cliente
     volume: number;
     pumpType: string; // Bomba
     concreteDate: string; // Data Concretagem
-    notes?: string;
+    concreteTime?: string; // Hora da Concretagem
+    fck?: number; // FCK
+    contract?: number; // Contrato
+    notes?: string; // Observações gerais
+    observations?: string; // Observações adicionais
 }
 
 export interface Branch {
