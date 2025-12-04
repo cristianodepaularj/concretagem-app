@@ -1,50 +1,50 @@
--- Execute este SQL no Supabase SQL Editor para criar os perfis dos usuários existentes
+-- Execute este SQL no Supabase SQL Editor
+-- Este script cria perfis para os usuários que já existem no auth.users
 
--- Inserir perfil para cristianospaula1972@gmail.com (Admin)
+-- Primeiro, vamos ver quais usuários existem no auth.users
+-- SELECT id, email FROM auth.users;
+
+-- Criar perfis para TODOS os usuários que existem no auth.users mas não têm perfil
 INSERT INTO public.users (id, email, name, role, branch, phone)
-VALUES (
-    '8b5c2217-df59-4d4f-9a6e-d766ee0288d8',
-    'cristianospaula1972@gmail.com',
-    'Cristiano Santos de Paula',
-    'admin',
-    NULL,
-    NULL
-)
-ON CONFLICT (id) DO UPDATE SET
-    name = EXCLUDED.name,
-    role = EXCLUDED.role;
+SELECT 
+    au.id,
+    au.email,
+    COALESCE(au.raw_user_meta_data->>'name', SPLIT_PART(au.email, '@', 1)) as name,
+    CASE 
+        WHEN au.email = 'cristianospaula1972@gmail.com' THEN 'admin'
+        ELSE 'consultant'
+    END as role,
+    'PIRACICABA' as branch,
+    NULL as phone
+FROM auth.users au
+WHERE NOT EXISTS (
+    SELECT 1 FROM public.users pu WHERE pu.id = au.id
+);
 
--- Inserir perfil para csp1972@gmail.com (Consultor)
-INSERT INTO public.users (id, email, name, role, branch, phone)
-VALUES (
-    '4d63e2be-a4d0-4269-990a-15eea1357686',
-    'csp1972@gmail.com',
-    'csp1972',
-    'consultant',
-    'PIRACICABA',
-    '21972866430'
-)
-ON CONFLICT (id) DO UPDATE SET
-    name = EXCLUDED.name,
-    role = EXCLUDED.role,
-    branch = EXCLUDED.branch,
-    phone = EXCLUDED.phone;
+-- Atualizar dados do admin se já existir
+UPDATE public.users
+SET 
+    name = 'Cristiano Santos de Paula',
+    role = 'admin'
+WHERE email = 'cristianospaula1972@gmail.com';
 
--- Inserir perfil para cursos.csp1972@gmail.com (Consultor)
-INSERT INTO public.users (id, email, name, role, branch, phone)
-VALUES (
-    '859c9c93-4865-42eb-9699-d6631d53568d',
-    'cursos.csp1972@gmail.com',
-    'Cristiano Santos de Paula',
-    'consultant',
-    'PIRACICABA',
-    '21972866430'
-)
-ON CONFLICT (id) DO UPDATE SET
-    name = EXCLUDED.name,
-    role = EXCLUDED.role,
-    branch = EXCLUDED.branch,
-    phone = EXCLUDED.phone;
+-- Atualizar dados do consultor csp1972 se já existir
+UPDATE public.users
+SET 
+    name = 'csp1972',
+    role = 'consultant',
+    branch = 'PIRACICABA',
+    phone = '21972866430'
+WHERE email = 'csp1972@gmail.com';
 
--- Verificar se os perfis foram criados
-SELECT * FROM public.users;
+-- Atualizar dados do consultor cursos.csp1972 se já existir
+UPDATE public.users
+SET 
+    name = 'Cristiano Santos de Paula',
+    role = 'consultant',
+    branch = 'PIRACICABA',
+    phone = '21972866430'
+WHERE email = 'cursos.csp1972@gmail.com';
+
+-- Verificar os perfis criados
+SELECT id, email, name, role, branch FROM public.users ORDER BY email;

@@ -10,6 +10,7 @@ export const PreSchedule = () => {
     const navigate = useNavigate();
 
     const [formData, setFormData] = useState({
+        branch: '',
         client: '',
         volume: '',
         pumpType: 'CONVENCIONAL',
@@ -23,7 +24,7 @@ export const PreSchedule = () => {
 
         addOrder({
             dateRequest: new Date().toISOString().split('T')[0],
-            branch: user.branch || 'PIRACICABA', // Fallback if not set
+            branch: formData.branch,
             consultantId: user.id,
             consultantName: user.name,
             client: formData.client,
@@ -47,6 +48,24 @@ export const PreSchedule = () => {
 
                 <form onSubmit={handleSubmit} className="p-6 space-y-6">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        {/* Branch Selection */}
+                        <div className="col-span-2">
+                            <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center">
+                                <Truck size={16} className="mr-2" /> Filial
+                            </label>
+                            <select
+                                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                                value={formData.branch}
+                                onChange={e => setFormData({ ...formData, branch: e.target.value })}
+                                required
+                            >
+                                <option value="">Selecione a filial...</option>
+                                <option value="PIRACICABA">PIRACICABA</option>
+                                <option value="SANTA BARBARA">SANTA BARBARA</option>
+                                <option value="RIO CLARO">RIO CLARO</option>
+                            </select>
+                        </div>
+
                         {/* Client */}
                         <div className="col-span-2">
                             <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center">
